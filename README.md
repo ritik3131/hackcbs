@@ -1,9 +1,10 @@
-# IITBBS_GC_Webathon
+# Hackcbs 5.0
 
 Members of the team:
 
+- Rishvic Pushpakaran
 - Ritik Gupta
-- Satyansh Shukla
+- Chinmay Negi
 - Prateek Singh
 
 ## Getting Started
@@ -27,8 +28,6 @@ npm start in backend and cliend both
 # or
 yarn start
 ```
-## Video Demo
-[Click here](https://drive.google.com/drive/u/1/folders/1IuRLlRYaGSR4luFGUft8SurHIEgUwn2X)
 ## Features
 
 - Created an online social media platform where one can interact with others, share posts and comments, like others' posts, etc.
