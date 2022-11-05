@@ -12,7 +12,7 @@ const post_schema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
+      // required: true,
     },
     upvotes: {
       type: Array,
@@ -38,6 +38,14 @@ const post_schema = new mongoose.Schema(
     blacklist: {
       type: Boolean,
       default: false,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    videoUrl: {
+      type: String,
+      // required: true,
     },
     noOfReplies: { type: Number, default: 0 },
   },

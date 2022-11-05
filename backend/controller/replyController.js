@@ -19,24 +19,24 @@ const getReplies = async (req, res) => {
   }
 };
 
-const createReply = async (req, res) => {
+const createReply = async (req, res) => { 
+  console.log(req.body)
   const postId = req.body.postId;
   try {
-    const replyPost = await post.findById(postId);
-    if (replyPost) {
-      const newreply = new reply({
-        username: req.user.name,
-        content: req.body.content,
-        userid: mongoose.Types.ObjectId(req.user._id),
-        postid: mongoose.Types.ObjectId(postId),
-      });
-      await newreply.save();
-      replyPost.noOfReplies += 1;
-      await replyPost.save();
-      res.status(201).send();
-    } else {
-      res.status(500).send();
-    }
+    await post.findOneAndUpdate(
+      { id: postId },
+      { $inc: { "noOfReplies": 1 } }
+    );
+    const newreply = new reply({
+      // username: req.user.name,
+      username: req.body.name,
+      content: req.body.content,
+      // userid: mongoose.Types.ObjectId(req.user._id),
+      userid: req.body.userId,
+      postid: mongoose.Types.ObjectId(postId),
+    });
+    await newreply.save();
+    res.status(200).send("Okd");
   } catch (err) {
     res.status(500).send();
   }
@@ -101,8 +101,7 @@ const vote = async (req, res) => {
         }
       }
       change = { downvotes: downvoters, upvotes: upvoters };
-      if(downvoters.length>100)
-        change.blacklist=true;
+      if (downvoters.length > 100) change.blacklist = true;
       await reply.findByIdAndUpdate(replyId, change);
       res.status(200).json({
         status: "success",
@@ -134,10 +133,37 @@ const deleteReply = async (req, res) => {
     res.status(400).send();
   }
 };
+
+const answerToReply = async (req, res) => {
+  try {
+    const replyId = req.body.replyId;
+    const userId = req.body.userId;
+    // const userId = req.user._id;
+    const textBoby = req.body.textBody;
+    if (userId && textBoby) {
+    await reply.updateOne(
+        { id: replyId },
+        {
+          $push: {
+            answers: {
+              userId: userId,
+              textBoby: textBoby,
+            },
+          },
+        }
+      );
+      res.status(200).send();
+    }
+  } catch (err) {
+    res.status(500).send();
+  }
+};
+
 module.exports = {
   getReplies,
   createReply,
   toggleBlackListReply,
   vote,
+  answerToReply,
   deleteReply,
 };

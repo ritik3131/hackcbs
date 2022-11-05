@@ -1,13 +1,13 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const reply_schema = new mongoose.Schema(
   {
     content: {
       type: String,
-      required: 'true',
+      required: "true",
       validate(data) {
         if (data.match(/(fuck|sex|porn|dick|cock|cunt|pussy|asshole)/i))
-          throw new Error('Abusive Language detected');
+          throw new Error("Abusive Language detected");
       },
     },
     upvotes: {
@@ -34,18 +34,22 @@ const reply_schema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    answers: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
 
-reply_schema.virtual('noUpvotes').get(function () {
+reply_schema.virtual("noUpvotes").get(function () {
   return this.upvotes.length;
 });
 
-reply_schema.virtual('noDownvotes').get(function () {
+reply_schema.virtual("noDownvotes").get(function () {
   return this.downvotes.length;
 });
 
-const reply = mongoose.model('reply', reply_schema);
+const reply = mongoose.model("reply", reply_schema);
 
 module.exports = reply;

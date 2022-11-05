@@ -1,7 +1,5 @@
 const express = require("express");
-const post = require("../model/Posts");
 const router = new express.Router();
-const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const {
@@ -51,11 +49,11 @@ const upload = multer({
   fileFilter: fileFilter,
 }).single("image");
 
-router.post("/", upload, createPost);
+router.post("/", upload,/*ensureAuth,*/ createPost);
 
-router.patch("/blackList",  isAdmin, toggleBlackListPost);
+router.patch("/blackList",/*ensureAuth,*/  isAdmin, toggleBlackListPost);
 
-router.patch("/vote", vote);
+router.patch("/vote",/*ensureAuth,*/ vote);
 
-router.delete("/:postId",  deletePost);
+router.delete("/:postId",/*ensureAuth,*/  deletePost);
 module.exports = router;

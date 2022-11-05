@@ -7,10 +7,10 @@ const getAllPost = async (req, res) => {
     //?sort=hot
     let sortby = { createdAt: -1 };
     if (req.query.sort == "hot") sortby = { noupvotes: -1 };
-    
+
     let filter = { blacklist: "false" };
     if (req.session.isAdmin) filter = {};
-    if(req.query.sort == 'pinned') filter.userid={$in: req.user.pinned};
+    if (req.query.sort == "pinned") filter.userid = { $in: req.user.pinned };
     const posts = await postModel
       .find(filter)
       .sort(sortby)
@@ -43,9 +43,13 @@ const createPost = async (req, res) => {
   try {
     const newPost = new postModel({
       username: req.user.name,
+      // username: req.body.name,
       content: req.body.content,
       image: req.file.path,
       userid: mongoose.Types.ObjectId(req.user._id),
+      // userid: req.body.userId,
+      videoUrl: req.body.videoUrl,
+      description:req.body.description
     });
     await newPost.save();
     res.status(201).send();
@@ -129,9 +133,8 @@ const vote = async (req, res) => {
         upvotes: upvoters,
         noupvotes: upvoters.length,
       };
-      if(downvoters.length>100)
-        change.blacklist=true;
-      
+      if (downvoters.length > 100) change.blacklist = true;
+
       await postModel.findByIdAndUpdate(postId, change);
       res.status(200).json({
         status: "success",
