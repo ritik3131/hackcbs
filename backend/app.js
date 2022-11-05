@@ -15,6 +15,7 @@ const replyRouter = require("./routes/replyRoutes");
 const postRouter = require("./routes/postRoutes");
 const userRouter = require("./routes/userRoutes");
 const searchRouter = require("./routes/searchRoutes");
+const courseRouter = require("./routes/courseRoutes");
 // const UserModel = require("./model/userModel");
 
 process.on("uncaughtException", (err) => {
@@ -99,6 +100,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/post", postRouter);
 app.use("/api/v1/reply", replyRouter);
 app.use("/api/v1/search", searchRouter);
+app.use("/api/v1/course", courseRouter);
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));
 

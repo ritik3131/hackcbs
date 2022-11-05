@@ -1,9 +1,8 @@
-const postModel = require("../model/Posts");
-const replyModel = require("../model/Replies");
 const courseModel = require("../model/Courses");
+const postModel = require("../model/Posts");
 const mongoose = require("mongoose");
 
-const getAllPost = async (req, res) => {
+const getAllCourse = async (req, res) => {
   try {
     //?sort=hot
     let sortby = { createdAt: -1 };
@@ -12,58 +11,48 @@ const getAllPost = async (req, res) => {
     let filter = { blacklist: "false" };
     if (req.session.isAdmin) filter = {};
     if (req.query.sort == "pinned") filter.userid = { $in: req.user.pinned };
-    const posts = await postModel
+    const courses = await courseModel
       .find(filter)
       .sort(sortby)
       .populate("userid")
       .exec();
-    res.status(200).json(posts);
+    res.status(200).json(courses);
   } catch (err) {
     console.log(err);
     res.status(500).send();
   }
 };
 
-const getOnePost = async (req, res) => {
+const getOneCourse = async (req, res) => {
   try {
-    const postId = req.params.postId;
+    const courseId = req.params.courseId;
     let sortby = { upvotes: -1 };
     let showBlacklist = { blackList: "false" };
     if (req.session.isAdmin) showBlacklist = {};
-    const post = await postModel.findById(postId).populate("userid");
-    const replies = await replyModel
-      .find({ postid: postId, showBlacklist })
-      .sort(sortby);
-    res.status(200).json({ post, replies });
+    const course = await courseModel.findById(courseId).populate("userid");
+    const sections = (await courseModel.findById(courseId).populate("sections"))
+      .sections;
+    // const sections = await postModel
+    //   .find({ postid: postId, showBlacklist })
+    //   .sort(sortby);
+    res.status(200).json({ course, sections });
   } catch (err) {
     res.status(400).send();
   }
 };
 
-const createPost = async (req, res) => {
+const createCourse = async (req, res) => {
   try {
-    const courseId= req.body.courseId;
-    const newPost = new postModel({
+    const newCourse = new courseModel({
       username: req.user.name,
       // username: req.body.name,
       content: req.body.content,
       image: req.file.path,
       userid: mongoose.Types.ObjectId(req.user._id),
       // userid: req.body.userId,
-      videoUrl: req.body.videoUrl,
-      description:req.body.description
+      description: req.body.description,
     });
-    await newPost.save();
-
-    await courseModel.updateOne(
-      { id: courseId },
-      {
-        $push: {
-          sections: newPost._id
-        },
-      }
-    );
-
+    await newCourse.save();
     res.status(201).send();
   } catch (err) {
     console.log(err);
@@ -71,23 +60,23 @@ const createPost = async (req, res) => {
   }
 };
 
-const toggleBlackListPost = async (req, res) => {
+const toggleBlackListCourse = async (req, res) => {
   try {
     const change = { blacklist: !req.body.blacklist };
     const postId = req.body.postId;
-    await postModel.findByIdAndUpdate(postId, change);
+    await courseModel.findByIdAndUpdate(postId, change);
     res.status(200).send();
   } catch (e) {
     res.status(400).send();
   }
 };
 
-const deletePost = async (req, res) => {
+const deleteCourse = async (req, res) => {
   try {
-    const postId = req.params.postId.trim();
-    const post = await postModel.findById(postId);
-    if (req.user._id.toString() === post.userid.toString())
-      return await post.delete();
+    const courseId = req.params.courseId.trim();
+    const course = await courseModel.findById(courseId);
+    if (req.user._id.toString() === course.userid.toString())
+      return await course.delete();
     res.status(200).send();
   } catch (err) {
     res.status(400).send();
@@ -102,13 +91,13 @@ const vote = async (req, res) => {
   // }
   try {
     const up = req.body.upvote;
-    const postId = req.body.postId;
+    const courseId = req.body.courseId;
     const userId = req.body.userId;
     // const userId = req.user._id
     try {
-      const post = await postModel.findById(postId);
-      let downvoters = post.downvotes;
-      let upvoters = post.upvotes;
+      const course = await courseModel.findById(courseId);
+      let downvoters = course.downvotes;
+      let upvoters = course.upvotes;
       if (up) {
         if (downvoters.includes(userId)) {
           const index = downvoters.indexOf(userId);
@@ -147,14 +136,14 @@ const vote = async (req, res) => {
       };
       if (downvoters.length > 100) change.blacklist = true;
 
-      await postModel.findByIdAndUpdate(postId, change);
+      await courseModel.findByIdAndUpdate(courseId, change);
       res.status(200).json({
         status: "success",
       });
     } catch (err) {
       res.status(404).json({
         status: "fail",
-        message: "Post does not exit",
+        message: "Course does not exit",
       });
     }
   } catch (err) {
@@ -163,10 +152,10 @@ const vote = async (req, res) => {
 };
 
 module.exports = {
-  getAllPost,
-  getOnePost,
+  getAllCourse,
+  getOneCourse,
   vote,
-  createPost,
-  toggleBlackListPost,
-  deletePost,
+  createCourse,
+  toggleBlackListCourse,
+  deleteCourse,
 };

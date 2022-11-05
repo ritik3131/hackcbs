@@ -20,10 +20,12 @@ const reply_schema = new mongoose.Schema(
     },
     postid: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "post",
       required: true,
     },
     userid: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
       required: true,
     },
     username: {
