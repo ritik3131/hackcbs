@@ -34,19 +34,19 @@ const fileStorage = multer.diskStorage({
   },
 });
 
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  )
-    cb(null, true);
-  else cb(null, false);
-};
+// const fileFilter = (req, file, cb) => {
+//   if (
+//     file.mimetype === "image/png" ||
+//     file.mimetype === "image/jpg" ||
+//     file.mimetype === "image/jpeg"
+//   )
+//     cb(null, true);
+//   else cb(null, false);
+// };
 
 const upload = multer({
   storage: fileStorage,
-  fileFilter: fileFilter,
+  // fileFilter: fileFilter,
 }).single("image");
 
 router.post("/", upload, /*ensureAuth,*/ createCourse);

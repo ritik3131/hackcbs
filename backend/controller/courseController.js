@@ -16,7 +16,12 @@ const getAllCourse = async (req, res) => {
       .sort(sortby)
       .populate("userid")
       .exec();
-    res.status(200).json(courses);
+    const myCourses = await courseModel
+      .find({ userid: req.user._id })
+      .sort(sortby)
+      .populate("userid")
+      .exec();
+    res.status(200).json({ courses, myCourses });
   } catch (err) {
     console.log(err);
     res.status(500).send();

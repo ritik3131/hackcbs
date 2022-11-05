@@ -44,11 +44,11 @@ const courseSchema = new mongoose.Schema(
       required: true,
     },
     noOfReplies: { type: Number, default: 0 },
-    sections: {
+    sections:[ {
       type: mongoose.Schema.Types.ObjectId,
       ref: "post",
-      required: true,
-    },
+      // required: true,
+    }],
   },
   { timestamps: true },
   {

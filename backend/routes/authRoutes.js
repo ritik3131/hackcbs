@@ -16,7 +16,7 @@ router.get('/login/user',getCurrentUser);
 router.get(
   "/login/google",
   passport.authenticate("google", {
-    successRedirect: process.env.FRONTEND_HOST,
+    successRedirect: `${process.env.FRONTEND_HOST}/admin/index`,
     failureRedirect: "/",
   })
 );
