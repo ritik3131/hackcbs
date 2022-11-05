@@ -41,7 +41,7 @@ const Icons = () => {
       );
     setContent("");
     setDescription("");
-    // setImageUrl(null);
+    setImageUrl(null);
     // reload();
   };
   return (
@@ -92,7 +92,7 @@ const Icons = () => {
                     component="label"
                   >
                     <input
-                    hidden
+                      hidden
                       name="image"
                       accept="image/*"
                       type="file"

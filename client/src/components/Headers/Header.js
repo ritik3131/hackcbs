@@ -11,7 +11,7 @@ import {
   Button,
 } from "reactstrap";
 
-const Header = ({ createdCourses, totalCourses, Ontoggle ,displayCards }) => {
+const Header = ({ createdCourses, totalCourses, OnToggle ,displayCards }) => {
   return (
     <>
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
@@ -47,7 +47,7 @@ const Header = ({ createdCourses, totalCourses, Ontoggle ,displayCards }) => {
                           color="primary"
                           type="button"
                           style={{ marginTop: "10px" }}
-                          onClick={(e) => Ontoggle(0)}
+                          onClick={(e) => OnToggle(0)}
                         >
                           SHOW
                         </Button>
@@ -80,7 +80,7 @@ const Header = ({ createdCourses, totalCourses, Ontoggle ,displayCards }) => {
                           color="primary"
                           type="button"
                           style={{ marginTop: "10px" }}
-                          onClick={(e) => Ontoggle(1)}
+                          onClick={(e) => OnToggle(1)}
                         >
                           SHOW
                         </Button>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -18,6 +18,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import AddIcon from "@mui/icons-material/Add";
 import { ListItem, Stack, TextField, Grid } from "@mui/material";
+import axiosInstance from "util/axiosInstance";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -31,20 +32,51 @@ const ExpandMore = styled((props) => {
 
 export default function RecipeReviewCard() {
   const [expanded, setExpanded] = React.useState(false);
+  const [sectionNo, setSectionNo] = useState(1);
+  const [title, setTitle] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [image, setImage] = useState(null);
+  const [description, setDescription] = useState("");
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const submitHandler = async () => {
+    let formData = new FormData();
+    formData.append("content", title);
+    formData.append("description", description);
+    formData.append("videoUrl", videoUrl);
+    // formData.append("username", "Chris");
+    formData.append("image", image);
+    if (title.trim().length > 0)
+      await axiosInstance.post(
+        `${process.env.REACT_APP_BACKEND_HOST}/post`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    setTitle("");
+    setDescription("");
+    setImage(null);
+    setSectionNo((prevState) => prevState + 1);
+    setVideoUrl("");
+  };
+
   return (
     <Card sx={{ maxWidth: "100%" }} style={{ margin: "0 20px" }}>
       <CardHeader
-        title={`Section ${"1"}`}
+        title={`Section ${sectionNo}`}
         subheader={
           <TextField
             id="outlined-basic"
             label="Section Name"
             variant="outlined"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         }
       />
@@ -72,14 +104,18 @@ export default function RecipeReviewCard() {
               <TextField
                 id="outlined-basic"
                 label="Content"
+                value={description}
                 variant="outlined"
+                onChange={(e) => setDescription(e.target.value)}
               />
             </Grid>
             <Grid item md={4} xs={12}>
               <TextField
                 id="outlined-basic"
                 label="Video URL"
+                value={videoUrl}
                 variant="outlined"
+                onChange={(e) => setVideoUrl(e.target.value)}
               />
             </Grid>
             <Grid item md={4} xs={12}>
@@ -88,13 +124,19 @@ export default function RecipeReviewCard() {
                 aria-label="upload picture"
                 component="label"
               >
-                <input hidden accept="image/*" type="file" />
+                <input
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
                 <Typography style={{ fontWeight: "900" }}>
                   Image Upload
                 </Typography>
                 <PhotoCamera />
               </IconButton>
             </Grid>
+                <Button onClick={submitHandler}>Submit</Button>
           </Grid>
         </CardContent>
       </Collapse>

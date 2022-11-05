@@ -81,18 +81,23 @@ const Index = (props) => {
     setActiveNav(index);
     setChartExample1Data("data" + index);
   };
-  const toggleHandler =(index)=>{
-    if(index) setCourses(myCourses);
-    else setCourses(courses)
-  }
+  const toggleHandler = (index) => {
+    if (index) setCourses(myCourses);
+    else setCourses(courses);
+  };
   return (
     <>
-      <Header displayCards={true} totalCourses = {courses.length} createdCourses={myCourses.length} OnToggle={toggleHandler}/>
+      <Header
+        displayCards={true}
+        totalCourses={courses.length}
+        createdCourses={myCourses.length}
+        OnToggle={toggleHandler}
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
           {courses.map((course) => {
-            <Col className="mb-3 mb-xl-0" xl="8">
+            return( <Col className="mb-3 mb-xl-0" xl="8">
               <Card style={{ marginBottom: "20px" }}>
                 <Card style={{ margin: "20px" }}>
                   <CardBody>
@@ -112,7 +117,7 @@ const Index = (props) => {
                       style={{ maxWidth: "100%", maxHeight: "100%" }}
                     />
                     <CardText style={{ marginTop: "20px" }}>
-                     {course.description}
+                      {course.description}
                     </CardText>
                     <Row md="4" sm="2" xs="1">
                       <Col>
@@ -181,7 +186,7 @@ const Index = (props) => {
                   </CardBody>
                 </Card>
               </Card>
-            </Col>;
+            </Col>)
           })}
           <Col xl="4">
             <Card className="shadow">
