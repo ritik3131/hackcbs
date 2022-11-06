@@ -1,20 +1,5 @@
-/*!
 
-=========================================================
-* Argon Dashboard React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
@@ -22,7 +7,7 @@ import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
-
+import ARRender from "views/examples/ARRender"
 var routes = [
   {
     path: "/index",
@@ -46,7 +31,13 @@ var routes = [
     component: Profile,
     layout: "/admin",
   },
-
+  {
+    path: "/AR",
+    name: "AR Beta",
+    icon: "world",
+    component: ARRender,
+    layout: "/admin",
+  },
   {
     path: "/login",
     name: "Logout",

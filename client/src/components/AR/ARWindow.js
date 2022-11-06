@@ -1,5 +1,5 @@
-const ARWindow = (props) => {
-  const { model, position, preset, scale } = props;
+ const ARWindow = (props) => {
+  let { model, position, preset, scale } = props;
   position = position ?? "0 0 0";
   preset = preset ?? "hiro";
   const scaleStr =
@@ -21,3 +21,4 @@ const ARWindow = (props) => {
     </a-scene>
   );
 };
+export default ARWindow
