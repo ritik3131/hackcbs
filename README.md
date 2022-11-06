@@ -51,7 +51,7 @@ yarn start
 
 - For accessing courses the user clicks explore button to navigate to the course page where he can see the overview of course with all the sections.
 
-- It has a searching feature which includes **Elastic Search** to search *************
+- Course content, which is stored in MongoDB, is regularly synced to an Elasticsearch instance so as to improve search latency.
 
 - The user can migrate to individual sections to see the contents of that sections and is also allowed to like dislike and ask the questions.
 
@@ -63,7 +63,7 @@ yarn start
 
 - One of the main highlight of the app includes AR integration which is in beta mode and can be further upgraded for various awesome hacks.
 
-- AR integration for now includes
+- AR integration for now includes the ability of rendering various 3D models on Hiro/Kanji markers.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

@@ -35,8 +35,12 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
 //Things related to images
 app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/ar-models", express.static(path.join(__dirname, "ar-models")));
 // app.use(
 //   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 // );
@@ -101,6 +105,12 @@ app.use("/api/v1/post", postRouter);
 app.use("/api/v1/reply", replyRouter);
 app.use("/api/v1/search", searchRouter);
 app.use("/api/v1/course", courseRouter);
+
+app.get("/ar-demo", (req, res) => {
+  res.render("ar-demo", {
+    scene: { url: req.query.scene, scale: req.query.scale || "1 1 1" },
+  });
+});
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));
 
