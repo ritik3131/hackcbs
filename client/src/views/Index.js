@@ -93,6 +93,10 @@ const Index = (props) => {
   const [saveIndex, setSaveIndex] = useState(0);
   const [renderSection, setRenderSection] = useState(false);
   const [indexSection, setIndexSection] = useState(0);
+
+  const goback = () => {
+    setRenderSection(false);
+  };
   function generate(element) {
     return courses[saveIndex].sections.map((value, index) => (
       <ListItem
@@ -327,7 +331,7 @@ const Index = (props) => {
             </Col>
           )}
           {renderSection &&
-            SectionCard(courses[saveIndex].sections[indexSection])}
+            SectionCard(courses[saveIndex].sections[indexSection], goback)}
         </Row>
       </Container>
     </>
@@ -349,7 +353,6 @@ function CommentCard(course) {
               {course.content}
             </CardTitle>
             <Row md="4" sm="2" xs="1">
-              
               <Col>
                 <Button
                   className="btn-icon btn-3"
@@ -377,7 +380,6 @@ function CommentCard(course) {
                 </Button>
               </Col>
             </Row>
-          
           </CardBody>
         </Card>
         <div
@@ -399,7 +401,7 @@ function CommentCard(course) {
     </Col>
   );
 }
-function SectionCard(course) {
+function SectionCard(course, goback) {
   return (
     <>
       <Col className="mb-3 mb-xl-0" xl="8">
@@ -433,14 +435,13 @@ function SectionCard(course) {
                     style={{ marginBottom: "5px" }}
                     onClick={(e) => {
                       e.preventDefault();
-                      // setSaveIndex(index);
-                      // setEntireCard(true);
+                      goback();
                     }}
                   >
                     <span className="btn-inner--icon">
                       <ExploreIcon />
                     </span>
-                    <span className="btn-inner--text">Explore</span>
+                    <span className="btn-inner--text">Go Back</span>
                   </Button>
                 </Col>
                 <Col>
@@ -499,7 +500,6 @@ function SectionCard(course) {
         </Card>
         {CommentCard(course)}
       </Col>
-     
     </>
   );
 }
