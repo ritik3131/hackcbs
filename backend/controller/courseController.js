@@ -15,11 +15,13 @@ const getAllCourse = async (req, res) => {
       .find(filter)
       .sort(sortby)
       .populate("userid")
+      .populate("sections")
       .exec();
     const myCourses = await courseModel
       .find({ userid: req.user._id })
       .sort(sortby)
       .populate("userid")
+      .populate("sections")
       .exec();
     res.status(200).json({ courses, myCourses });
   } catch (err) {

@@ -1,11 +1,20 @@
+import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-// node.js library that concatenates classes (strings)
-import classnames from "classnames";
 // javascipt plugin for creating charts
 import Chart from "chart.js";
-// react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
 // reactstrap components
+import { styled } from "@mui/material/styles";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemText from "@mui/material/ListItemText";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import FolderIcon from "@mui/icons-material/Folder";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Rating } from "react-simple-star-rating";
 import {
   Button,
@@ -14,33 +23,28 @@ import {
   CardTitle,
   CardImg,
   CardText,
-  CardHeader,
-  NavItem,
-  NavLink,
-  Nav,
-  Progress,
-  Table,
   Container,
   Row,
   Col,
 } from "reactstrap";
 
 // core components
-import {
-  chartOptions,
-  parseOptions,
-  chartExample1,
-  chartExample2,
-} from "variables/charts.js";
+import { chartOptions, parseOptions } from "variables/charts.js";
 import ExploreIcon from "@mui/icons-material/Explore";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import Header from "components/Headers/Header.js";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import BlockIcon from "@mui/icons-material/Block";
 import axios from "axios";
 import axiosInstance from "../util/axiosInstance";
 import { AuthContext } from "../context/auth";
+import FolderCopyIcon from "@mui/icons-material/FolderCopy";
+const Demo = styled("div")(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+}));
+
 const Index = (props) => {
+  const [dense, setDense] = React.useState(false);
+  const [secondary, setSecondary] = React.useState(false);
   const [courses, setCourses] = useState([]);
   const [myCourses, setMyCourses] = useState([]);
   const authCtx = useContext(AuthContext);
@@ -85,19 +89,137 @@ const Index = (props) => {
     if (index) setCourses(myCourses);
     else setCourses(courses);
   };
+  const [renderEntireCard, setEntireCard] = useState(false);
+  const [saveIndex, setSaveIndex] = useState(0);
+  const [renderSection, setRenderSection] = useState(false);
+  const [indexSection, setIndexSection] = useState(0);
+  function generate(element) {
+    return courses[saveIndex].sections.map((value, index) => (
+      <ListItem
+        onClick={() => {
+          console.log(index);
+          setIndexSection(index);
+          setRenderSection(true);
+        }}
+        style={{
+          cursor: "pointer",
+        }}
+        secondaryAction={
+          <IconButton edge="end" aria-label="delete"></IconButton>
+        }
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <FolderCopyIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={value.content} />
+      </ListItem>
+    ));
+  }
+  console.log(courses[saveIndex], "hue");
   return (
     <>
       <Header
-        displayCards={true}
+        displayCards={!renderEntireCard}
         totalCourses={courses.length}
         createdCourses={myCourses.length}
         OnToggle={toggleHandler}
       />
+
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
-          {courses.map((course) => {
-            return( <Col className="mb-3 mb-xl-0" xl="8">
+          {!renderEntireCard &&
+            courses.map((course, index) => {
+              return (
+                <>
+                  <Col className="mb-3 mb-xl-0" xl="8">
+                    <Card style={{ marginBottom: "20px" }}>
+                      <Card style={{ margin: "20px" }}>
+                        <CardBody>
+                          <CardTitle
+                            style={{
+                              fontSize: "30px",
+                              fontWeight: "600",
+                              color: "black",
+                            }}
+                          >
+                            {course.content}
+                          </CardTitle>
+                          <CardImg
+                            alt="..."
+                            src={course.image}
+                            top
+                            style={{ maxWidth: "100%", maxHeight: "100%" }}
+                          />
+                          <CardText style={{ marginTop: "20px" }}>
+                            {course.description}
+                          </CardText>
+                          <Row md="4" sm="2" xs="1">
+                            <Col>
+                              <Button
+                                className="btn-icon btn-3"
+                                color="primary"
+                                type="button"
+                                style={{ marginBottom: "5px" }}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setSaveIndex(index);
+                                  setEntireCard(true);
+                                }}
+                              >
+                                <span className="btn-inner--icon">
+                                  <ExploreIcon />
+                                </span>
+                                <span className="btn-inner--text">Explore</span>
+                              </Button>
+                            </Col>
+                            <Col>
+                              <Button
+                                className="btn-icon btn-3"
+                                color="success"
+                                type="button"
+                                style={{ marginBottom: "5px" }}
+                              >
+                                <span className="btn-inner--icon">
+                                  <ThumbUpIcon />
+                                </span>
+                                <span className="btn-inner--text">
+                                  {" "}
+                                  {course.upvotes.length} {"   "} Like
+                                </span>
+                              </Button>
+                            </Col>
+                            <Col>
+                              <Button
+                                className="btn-icon btn-3"
+                                color="danger"
+                                type="button"
+                                style={{ marginBottom: "5px" }}
+                              >
+                                <span className="btn-inner--icon">
+                                  <ThumbDownIcon />
+                                </span>
+                                <span className="btn-inner--text">
+                                  {" "}
+                                  {course.downvotes.length} {"   "}Dislike
+                                </span>
+                              </Button>
+                            </Col>
+                          </Row>
+                          <div className="App">
+                            <Rating initialValue={4} readonly={true} />
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </Card>
+                  </Col>
+                </>
+              );
+            })}
+          {renderEntireCard && !renderSection && (
+            <Col className="mb-3 mb-xl-0" xl="8">
               <Card style={{ marginBottom: "20px" }}>
                 <Card style={{ margin: "20px" }}>
                   <CardBody>
@@ -108,16 +230,16 @@ const Index = (props) => {
                         color: "black",
                       }}
                     >
-                      {course.content}
+                      {courses[saveIndex].content}
                     </CardTitle>
                     <CardImg
                       alt="..."
-                      src={course.image}
+                      src={courses[saveIndex].image}
                       top
                       style={{ maxWidth: "100%", maxHeight: "100%" }}
                     />
                     <CardText style={{ marginTop: "20px" }}>
-                      {course.description}
+                      {courses[saveIndex].description}
                     </CardText>
                     <Row md="4" sm="2" xs="1">
                       <Col>
@@ -126,11 +248,16 @@ const Index = (props) => {
                           color="primary"
                           type="button"
                           style={{ marginBottom: "5px" }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSaveIndex(0);
+                            setEntireCard(false);
+                          }}
                         >
                           <span className="btn-inner--icon">
                             <ExploreIcon />
                           </span>
-                          <span className="btn-inner--text">Explore</span>
+                          <span className="btn-inner--text">Go Back</span>
                         </Button>
                       </Col>
                       <Col>
@@ -145,7 +272,7 @@ const Index = (props) => {
                           </span>
                           <span className="btn-inner--text">
                             {" "}
-                            {course.upvotes.length} {"   "} Like
+                            {courses[saveIndex].upvotes.length} {"   "} Like
                           </span>
                         </Button>
                       </Col>
@@ -161,60 +288,220 @@ const Index = (props) => {
                           </span>
                           <span className="btn-inner--text">
                             {" "}
-                            {course.downvotes.length} {"   "}Dislike
+                            {courses[saveIndex].downvotes.length} {"   "}Dislike
                           </span>
                         </Button>
                       </Col>
-                      {/* <Col>
-                       <Button
-                         className="btn-icon btn-3"
-                         color="dark"
-                         type="button"
-                         style={{ marginBottom: "5px" }}
-                       >
-                         <span className="btn-inner--icon">
-                           <BlockIcon />
-                         </span>
-                         <span className="btn-inner--text">BlackList</span>
-                       </Button>
-                     </Col> */}
                     </Row>
                     <div className="App">
-                      {/* set initial value */}
                       <Rating initialValue={4} readonly={true} />
                     </div>
                   </CardBody>
                 </Card>
               </Card>
-            </Col>)
-          })}
-          <Col xl="4">
-            <Card className="shadow">
-              <CardHeader className="bg-transparent">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h6 className="text-uppercase text-muted ls-1 mb-1">
-                      Performance
-                    </h6>
-                    <h2 className="mb-0">Total orders</h2>
-                  </div>
-                </Row>
-              </CardHeader>
-              <CardBody>
-                {/* Chart */}
-                <div className="chart">
-                  <Bar
-                    data={chartExample2.data}
-                    options={chartExample2.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
+            </Col>
+          )}
+          {console.log(courses)}
+          {renderEntireCard && (
+            <Col xl="4">
+              <Card style={{ marginBottom: "20px" }}>
+                <Card style={{ margin: "20px" }}>
+                  <CardBody>
+                    <Grid item xs={12} md={6}>
+                      <CardTitle
+                        style={{
+                          fontSize: "30px",
+                          fontWeight: "600",
+                          color: "black",
+                        }}
+                      >
+                        Sections for course
+                      </CardTitle>
+                      <Demo>
+                        <List dense={dense}>{generate()}</List>
+                      </Demo>
+                    </Grid>
+                  </CardBody>
+                </Card>
+              </Card>
+            </Col>
+          )}
+          {renderSection &&
+            SectionCard(courses[saveIndex].sections[indexSection])}
         </Row>
       </Container>
     </>
   );
 };
+function CommentCard(course) {
+  return (
+    <Col className="mb-3 mb-xl-0" xl="12">
+      <Card style={{ marginBottom: "20px" }}>
+        <Card style={{ margin: "20px" }}>
+          <CardBody>
+            <CardTitle
+              style={{
+                fontSize: "30px",
+                fontWeight: "600",
+                color: "black",
+              }}
+            >
+              {course.content}
+            </CardTitle>
+            <Row md="4" sm="2" xs="1">
+              
+              <Col>
+                <Button
+                  className="btn-icon btn-3"
+                  color="success"
+                  type="button"
+                  style={{ marginBottom: "5px" }}
+                >
+                  <span className="btn-inner--icon">
+                    <ThumbUpIcon />
+                  </span>
+                  <span className="btn-inner--text"> Like</span>
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  className="btn-icon btn-3"
+                  color="danger"
+                  type="button"
+                  style={{ marginBottom: "5px" }}
+                >
+                  <span className="btn-inner--icon">
+                    <ThumbDownIcon />
+                  </span>
+                  <span className="btn-inner--text"> Dislike</span>
+                </Button>
+              </Col>
+            </Row>
+          
+          </CardBody>
+        </Card>
+        <div
+          style={{
+            margin: "20px",
+          }}
+        >
+          <TextField
+            fullWidth
+            id="outlined-basic"
+            label="Reply"
+            variant="outlined"
+            InputProps={{
+              endAdornment: <Button>Reply</Button>,
+            }}
+          />
+        </div>
+      </Card>
+    </Col>
+  );
+}
+function SectionCard(course) {
+  return (
+    <>
+      <Col className="mb-3 mb-xl-0" xl="8">
+        <Card style={{ marginBottom: "20px" }}>
+          <Card style={{ margin: "20px" }}>
+            <CardBody>
+              <CardTitle
+                style={{
+                  fontSize: "30px",
+                  fontWeight: "600",
+                  color: "black",
+                }}
+              >
+                {course.content}
+              </CardTitle>
+              <CardImg
+                alt="..."
+                src={course.image}
+                top
+                style={{ maxWidth: "100%", maxHeight: "100%" }}
+              />
+              <CardText style={{ marginTop: "20px" }}>
+                {course.description}
+              </CardText>
+              <Row md="4" sm="2" xs="1">
+                <Col>
+                  <Button
+                    className="btn-icon btn-3"
+                    color="primary"
+                    type="button"
+                    style={{ marginBottom: "5px" }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // setSaveIndex(index);
+                      // setEntireCard(true);
+                    }}
+                  >
+                    <span className="btn-inner--icon">
+                      <ExploreIcon />
+                    </span>
+                    <span className="btn-inner--text">Explore</span>
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    className="btn-icon btn-3"
+                    color="success"
+                    type="button"
+                    style={{ marginBottom: "5px" }}
+                  >
+                    <span className="btn-inner--icon">
+                      <ThumbUpIcon />
+                    </span>
+                    <span className="btn-inner--text">
+                      {" "}
+                      {course.upvotes.length} {"   "} Like
+                    </span>
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    className="btn-icon btn-3"
+                    color="danger"
+                    type="button"
+                    style={{ marginBottom: "5px" }}
+                  >
+                    <span className="btn-inner--icon">
+                      <ThumbDownIcon />
+                    </span>
+                    <span className="btn-inner--text">
+                      {" "}
+                      {course.downvotes.length} {"   "}Dislike
+                    </span>
+                  </Button>
+                </Col>
+              </Row>
+              <div className="App">
+                <Rating initialValue={4} readonly={true} />
+              </div>
+            </CardBody>
+          </Card>
+          <div
+            style={{
+              margin: "20px",
+            }}
+          >
+            <TextField
+              fullWidth
+              id="outlined-basic"
+              label="Ask Questions"
+              variant="outlined"
+              InputProps={{
+                endAdornment: <Button>Submit</Button>,
+              }}
+            />
+          </div>
+        </Card>
+        {CommentCard(course)}
+      </Col>
+     
+    </>
+  );
+}
 
 export default Index;
