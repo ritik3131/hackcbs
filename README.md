@@ -1,48 +1,70 @@
+
 # Hackcbs 5.0
 
-Members of the team:
+HackCBS 5.0, a legacy being carried forward by like-minded individuals aims to collaborate the intellects of programmers, designers, application developers, tech-geeks, and newbies in the world of programming for the intensive development of a hack.
+
+# Introduction
+We are introducing AR in an education platform. We will provide a method to real-time render 3D models within the real world, currently by using marker-based methods. Seeing the potential growth in the Metaverse, our platform will be able to utilize such innovations to the fullest in a core human necessity i.e. education.
+
+# Members of the team
+
+### Nibble Grabbers :
 
 - Rishvic Pushpakaran
 - Ritik Gupta
 - Chinmay Negi
 - Prateek Singh
 
-## Getting Started
+# Theme 
+Edtech + AR/VR
 
-First, installs the dependencies:
+# Tech Stack
+MERN + Elasticsearch (mirrored with MongoDB) so as to increase search speed.
+
+ARJS for AR Integration
+# Getting Started
+
+First, install the dependencies using:
 
 ```bash
-npm install in backend and cliend both
+npm install in backend and client both
 # or
 yarn install
 ```
 
-Second
+Second, add environment variable in .env
 
-Add environment variable in .env
-
-Third, run the development server:
+Third, run the development server using:
 
 ```bash
-npm start in backend and cliend both
+npm start in backend and client both
 # or
 yarn start
 ```
-## Features
+## Shipped Features
 
-- Created an online social media platform where one can interact with others, share posts and comments, like others' posts, etc.
+- Created an online platform where one can post course videos, images or text as a creater and can also view the content of other users.
 
-- This app will show the list of comments on the landing page without the login but the user can't access the post(comment, reply, like, dislike, etc…)
+- App has been authenticated and authorized using Google Oauth.
 
-- For accessing posts the first user has to login through the mail Id(google oath) then it will redirect the user to a home page where the user can create a new post which will contain an image and caption for the image. Users can now comment on any post and can like or dislike posts and comments.
+- This app will show the list of courses on the landing page along with likes, dislikes and thumbnail.
 
-- It has a searching feature to search a specific user or post and a sorting feature where the user can sort the post by different fields.
+- For accessing courses the user clicks explore button to navigate to the course page where he can see the overview of course with all the sections.
 
-- It has a unique feature where users can pin any no of user and then can use a flied from sorting feature to see the post of that specific user
+- It has a searching feature which includes **Elastic Search** to search *************
 
-- The above feature is for regular users but if a user is an admin user it has some additional features such as he/she can blacklist a reply of any comments, can blacklist comments(if a comment is blacklisted then it’s all reply will also become blacklisted) and can even blacklist any user(if a user is blacklisted then it’s all reply and comments will also become blacklisted ). And this blackistListed stuff will not be visible to a regular user.
+- The user can migrate to individual sections to see the contents of that sections and is also allowed to like dislike and ask the questions.
+
+- Every sections comes along with a Q and A section.
+
+- App also includes the user profile page for accessing and editing the user details.
 
 - Backend authorization is maintained by passport.js and JWT Tokens; for the frontend, Context API is used to maintain this.
 
+- One of the main highlight of the app includes AR integration which is in beta mode and can be further upgraded for various awesome hacks.
+
+- AR integration for now includes
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+![](https://hackcbs.tech/assets/img/logo_final.png)

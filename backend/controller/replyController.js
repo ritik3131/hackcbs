@@ -7,7 +7,7 @@ const getReplies = async (req, res) => {
     let sortby = { createdAt: -1 };
     if (req.query.sort == "hot") sortby = { noUpvotes: 1, noDownvotes: -1 };
     if (req.query.sort == "recent") sortby = { updatedAt: -1 };
-    const postid = req.query.postid;
+    const postid = req.body.postId;
     let showBlacklist = { blacklist: "false" };
     if (req.session.isAdmin) showBlacklist = {};
     const replies = await reply
@@ -20,7 +20,6 @@ const getReplies = async (req, res) => {
 };
 
 const createReply = async (req, res) => { 
-  console.log(req.body)
   const postId = req.body.postId;
   try {
     await post.findOneAndUpdate(
@@ -28,15 +27,15 @@ const createReply = async (req, res) => {
       { $inc: { "noOfReplies": 1 } }
     );
     const newreply = new reply({
-      // username: req.user.name,
-      username: req.body.name,
+      username: req.user.name,
+      // username: req.body.name,
       content: req.body.content,
-      // userid: mongoose.Types.ObjectId(req.user._id),
-      userid: req.body.userId,
+      userid: mongoose.Types.ObjectId(req.user._id),
+      // userid: req.body.userId,
       postid: mongoose.Types.ObjectId(postId),
     });
     await newreply.save();
-    res.status(200).send("Okd");
+    res.status(200).send();
   } catch (err) {
     res.status(500).send();
   }
@@ -137,8 +136,8 @@ const deleteReply = async (req, res) => {
 const answerToReply = async (req, res) => {
   try {
     const replyId = req.body.replyId;
-    const userId = req.body.userId;
-    // const userId = req.user._id;
+    // const userId = req.body.userId;
+    const userId = req.user._id;
     const textBoby = req.body.textBody;
     if (userId && textBoby) {
     await reply.updateOne(

@@ -38,6 +38,7 @@ import axios from "axios";
 import axiosInstance from "../util/axiosInstance";
 import { AuthContext } from "../context/auth";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
+import SectionCard from "../components/SectionCard";
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
@@ -47,6 +48,7 @@ const Index = (props) => {
   const [secondary, setSecondary] = React.useState(false);
   const [courses, setCourses] = useState([]);
   const [myCourses, setMyCourses] = useState([]);
+  const [repiles, setReplies] = useState([]);
   const authCtx = useContext(AuthContext);
   useEffect(() => {
     const getUser = async () => {
@@ -73,6 +75,7 @@ const Index = (props) => {
     };
     getAllCourses();
   }, []);
+
   const [activeNav, setActiveNav] = useState(1);
   const [chartExample1Data, setChartExample1Data] = useState("data1");
 
@@ -93,7 +96,13 @@ const Index = (props) => {
   const [saveIndex, setSaveIndex] = useState(0);
   const [renderSection, setRenderSection] = useState(false);
   const [indexSection, setIndexSection] = useState(0);
-
+  const [questionContent, setQuestionContent] = useState("");
+  const onChangeQuestion = (question) => {
+    setQuestionContent(question);
+  };
+  const clearContent = () => {
+    setQuestionContent("");
+  };
   const goback = () => {
     setRenderSection(false);
   };
@@ -101,7 +110,7 @@ const Index = (props) => {
     return courses[saveIndex].sections.map((value, index) => (
       <ListItem
         onClick={() => {
-          console.log(index);
+          console.log(index,"hue");
           setIndexSection(index);
           setRenderSection(true);
         }}
@@ -121,7 +130,6 @@ const Index = (props) => {
       </ListItem>
     ));
   }
-  console.log(courses[saveIndex], "hue");
   return (
     <>
       <Header
@@ -305,7 +313,6 @@ const Index = (props) => {
               </Card>
             </Col>
           )}
-          {console.log(courses)}
           {renderEntireCard && (
             <Col xl="4">
               <Card style={{ marginBottom: "20px" }}>
@@ -330,178 +337,17 @@ const Index = (props) => {
               </Card>
             </Col>
           )}
-          {renderSection &&
-            SectionCard(courses[saveIndex].sections[indexSection], goback)}
+          {renderSection && (
+            <SectionCard
+              course={courses[saveIndex].sections[indexSection]}
+              goback={goback}
+            />
+          )}
+          {console.log("val is ",renderSection)}
         </Row>
       </Container>
     </>
   );
 };
-function CommentCard(course) {
-  return (
-    <Col className="mb-3 mb-xl-0" xl="12">
-      <Card style={{ marginBottom: "20px" }}>
-        <Card style={{ margin: "20px" }}>
-          <CardBody>
-            <CardTitle
-              style={{
-                fontSize: "30px",
-                fontWeight: "600",
-                color: "black",
-              }}
-            >
-              {course.content}
-            </CardTitle>
-            <Row md="4" sm="2" xs="1">
-              <Col>
-                <Button
-                  className="btn-icon btn-3"
-                  color="success"
-                  type="button"
-                  style={{ marginBottom: "5px" }}
-                >
-                  <span className="btn-inner--icon">
-                    <ThumbUpIcon />
-                  </span>
-                  <span className="btn-inner--text"> Like</span>
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  className="btn-icon btn-3"
-                  color="danger"
-                  type="button"
-                  style={{ marginBottom: "5px" }}
-                >
-                  <span className="btn-inner--icon">
-                    <ThumbDownIcon />
-                  </span>
-                  <span className="btn-inner--text"> Dislike</span>
-                </Button>
-              </Col>
-            </Row>
-          </CardBody>
-        </Card>
-        <div
-          style={{
-            margin: "20px",
-          }}
-        >
-          <TextField
-            fullWidth
-            id="outlined-basic"
-            label="Reply"
-            variant="outlined"
-            InputProps={{
-              endAdornment: <Button>Reply</Button>,
-            }}
-          />
-        </div>
-      </Card>
-    </Col>
-  );
-}
-function SectionCard(course, goback) {
-  return (
-    <>
-      <Col className="mb-3 mb-xl-0" xl="8">
-        <Card style={{ marginBottom: "20px" }}>
-          <Card style={{ margin: "20px" }}>
-            <CardBody>
-              <CardTitle
-                style={{
-                  fontSize: "30px",
-                  fontWeight: "600",
-                  color: "black",
-                }}
-              >
-                {course.content}
-              </CardTitle>
-              <CardImg
-                alt="..."
-                src={course.image}
-                top
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
-              />
-              <CardText style={{ marginTop: "20px" }}>
-                {course.description}
-              </CardText>
-              <Row md="4" sm="2" xs="1">
-                <Col>
-                  <Button
-                    className="btn-icon btn-3"
-                    color="primary"
-                    type="button"
-                    style={{ marginBottom: "5px" }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goback();
-                    }}
-                  >
-                    <span className="btn-inner--icon">
-                      <ExploreIcon />
-                    </span>
-                    <span className="btn-inner--text">Go Back</span>
-                  </Button>
-                </Col>
-                <Col>
-                  <Button
-                    className="btn-icon btn-3"
-                    color="success"
-                    type="button"
-                    style={{ marginBottom: "5px" }}
-                  >
-                    <span className="btn-inner--icon">
-                      <ThumbUpIcon />
-                    </span>
-                    <span className="btn-inner--text">
-                      {" "}
-                      {course.upvotes.length} {"   "} Like
-                    </span>
-                  </Button>
-                </Col>
-                <Col>
-                  <Button
-                    className="btn-icon btn-3"
-                    color="danger"
-                    type="button"
-                    style={{ marginBottom: "5px" }}
-                  >
-                    <span className="btn-inner--icon">
-                      <ThumbDownIcon />
-                    </span>
-                    <span className="btn-inner--text">
-                      {" "}
-                      {course.downvotes.length} {"   "}Dislike
-                    </span>
-                  </Button>
-                </Col>
-              </Row>
-              <div className="App">
-                <Rating initialValue={4} readonly={true} />
-              </div>
-            </CardBody>
-          </Card>
-          <div
-            style={{
-              margin: "20px",
-            }}
-          >
-            <TextField
-              fullWidth
-              id="outlined-basic"
-              label="Ask Questions"
-              variant="outlined"
-              InputProps={{
-                endAdornment: <Button>Submit</Button>,
-              }}
-            />
-          </div>
-        </Card>
-        {CommentCard(course)}
-      </Col>
-    </>
-  );
-}
 
 export default Index;

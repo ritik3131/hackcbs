@@ -13,13 +13,28 @@ import {
 } from "reactstrap";
 // core components
 import UserHeader from "components/Headers/UserHeader.js";
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "context/auth";
+import axiosInstance from "util/axiosInstance";
 
 const Profile = () => {
-  const [formControl, setFormControl] = React.useState(true);
+  const [formControl, setFormControl] = useState(true);
+  const authCtx = useContext(AuthContext);
+  const { user } = authCtx;
+  useEffect(() => {
+    const getUser = async () => {
+      const response = await axiosInstance(
+        `${process.env.REACT_APP_BACKEND_HOST}/login/user`
+      );
+      if (!response.data.error) authCtx.login({ token: response.data.token });
+      else if (AuthContext.user) authCtx.logout();
+    };
+    getUser();
+  }, [authCtx]);
+  console.log(user);
   return (
     <>
-      <UserHeader />
+      <UserHeader name={user ? user.name : ""} />
       {/* Page content */}
       <Container className="mt--7" fluid>
         <div className="header-body">
@@ -120,7 +135,7 @@ const Profile = () => {
                       >
                         Blacklisted
                       </CardTitle>
-                      <span className="h2 font-weight-bold mb-0">49,65%</span>
+                      <span className="h2 font-weight-bold mb-0">0%</span>
                     </div>
                     <Col className="col-auto">
                       <div className="icon icon-shape bg-dark text-white rounded-circle shadow">
@@ -149,7 +164,7 @@ const Profile = () => {
                       <img
                         alt="..."
                         className="rounded-circle"
-                        src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                        src={require("assets/img/theme/team-4-800x800.jpg")}
                       />
                     </a>
                   </div>
@@ -176,13 +191,13 @@ const Profile = () => {
                   </div>
                 </Row>
                 <div className="text-center">
-                  <h3>Jessica Jones</h3>
+                  <h3>{user?user.name:""}</h3>
                   <div className="h5 font-weight-300">
                     <i className="ni location_pin mr-2" />
                   </div>
                   <div className="h5 mt-4">
                     <i className="ni business_briefcase-24 mr-2" />
-                    Solution Manager
+                    {user.isAdmin?"Admin":"User"}
                   </div>
                   <div>
                     <i className="ni education_hat mr-2" />
@@ -210,7 +225,7 @@ const Profile = () => {
                       }}
                       size="sm"
                     >
-                      {formControl ? `Edit Profile` : `Save Profile`}
+                      {/* {formControl ? `Edit Profile` : `Save Profile`} */}
                     </Button>
                   </Col>
                 </Row>
@@ -232,7 +247,7 @@ const Profile = () => {
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="lucky.jesse"
+                            defaultValue={user ? `@${user.name.split(" ")[0]}_grabber` : ""}
                             id="input-username"
                             placeholder="Username"
                             type="text"
@@ -251,7 +266,7 @@ const Profile = () => {
                           <Input
                             className="form-control-alternative"
                             id="input-email"
-                            placeholder="jesse@example.com"
+                            placeholder={user?user.email:""}
                             type="email"
                             disabled={formControl}
                           />
@@ -270,7 +285,7 @@ const Profile = () => {
                           <Input
                             disabled={formControl}
                             className="form-control-alternative"
-                            defaultValue="Lucky"
+                            defaultValue={user?user.name.split(" ")[0]:""}
                             id="input-first-name"
                             placeholder="First name"
                             type="text"
@@ -288,7 +303,7 @@ const Profile = () => {
                           <Input
                             disabled={formControl}
                             className="form-control-alternative"
-                            defaultValue="Jesse"
+                            defaultValue={user?user.name.split(" ")[1]:""}
                             id="input-last-name"
                             placeholder="Last name"
                             type="text"
